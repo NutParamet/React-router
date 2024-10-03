@@ -1,0 +1,90 @@
+import React from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Link } from 'react-router-dom';
+
+import { addProduct, removeProduct } from '../features/productSlice';
+
+import { useState } from 'react';
+
+
+
+function Products() {
+
+    const dispatch = useDispatch();
+
+    const productList = useSelector((state) => state.products);
+
+    const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
+
+
+
+    const handleAddProduct = () => {
+        const id = productList.length + 1;
+        dispatch(addProduct({ id, ...newProduct }));
+        setNewProduct({ name: '', price: '', description: '' });
+    };
+
+
+
+    const handleRemoveProduct = (id) => {
+
+        dispatch(removeProduct(id));
+
+    };
+
+
+
+    return (
+
+        <div>
+
+            <h2>Product List</h2>
+
+            <ul>
+
+                {productList.map(product => (
+
+                    <li key={product.id}>
+
+                        <Link to={`/product/${product.id}`}>
+
+                            {product.name} - {product.price}
+
+                        </Link>
+
+                        <button onClick={() => handleRemoveProduct(product.id)}>Remove</button>
+
+                    </li>
+
+                ))}
+
+            </ul>
+            <h3>Add a new product</h3>
+            <input
+                type="text"
+                placeholder="Name"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+            />
+            <input
+                type="text"
+                placeholder="Price"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+            />
+            <input
+                type="text"
+                placeholder="Description"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+            />
+
+            <button onClick={handleAddProduct}>Add Product</button>
+        </div>
+
+    );
+
+}
+export default Products; 
